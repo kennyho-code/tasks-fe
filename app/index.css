@@ -1,0 +1,15 @@
+.header {
+  height: 53px;
+  background-color: blue;
+}
+.side-bar{
+  background-color: green;
+  height: 100%;
+  width: 235px;
+  float: left;
+}
+
+.content-wrapper{
+  float: left;
+
+}
