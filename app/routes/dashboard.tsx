@@ -39,7 +39,35 @@ function SideBar() {
 function Content() {
   return (
     <div className="content-wrapper">
-      <p>content</p>
+      <div className="tasks-wrapper">
+        <h1>Dashboard</h1>
+        <h2>Good morning, Jane Doe</h2>
+        <Card />
+      </div>
+    </div>
+  );
+}
+
+function Card() {
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h2>Design</h2>
+      </div>
+      <ul>
+        <li>
+          <h3>Prepare dribble shot</h3>
+          <p>Today 12:00</p>
+        </li>
+        <li>
+          <h3>Invoice dashboard wirefram</h3>
+          <p>Today</p>
+        </li>
+      </ul>
+
+      <div className="card-footer">
+        <h3>Go to Collection</h3>
+      </div>
     </div>
   );
 }

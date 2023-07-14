@@ -1,15 +1,49 @@
 .header {
   height: 53px;
-  background-color: blue;
+  background-color: rgb(30, 30, 38);
 }
-.side-bar{
-  background-color: green;
+.side-bar {
+  background-color: rgb(30, 30, 38);
   height: 100%;
   width: 235px;
   float: left;
+  color: white;
+  border-top: 1px solid #101015;
 }
 
-.content-wrapper{
-  float: left;
+.content-wrapper {
+  margin: 0 auto;
+  display: table;
+}
 
+.card {
+  width: 570px;
+  background-color: rgb(30, 30, 38);
+  border-radius: 15px;
+  padding: 0px;
+  color: white;
+}
+
+.card h2 {
+  margin: 0;
+}
+
+.card-header {
+  background: #393346;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  overflow: hidden;
+  padding: 24px;
+  color: white;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border-top: 1px solid rgb(35, 35, 44);
+}
+
+.card-footer h3 {
+  margin: 0;
 }
