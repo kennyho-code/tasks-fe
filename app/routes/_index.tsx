@@ -1,5 +1,5 @@
 import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
-import indexStyles from "../index.css";
+import indexStyles from "../styles/index.css";
 import { Link } from "@remix-run/react";
 
 export const meta: V2_MetaFunction = () => {

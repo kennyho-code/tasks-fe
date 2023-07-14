@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
-import indexStyles from "../index.css";
+import indexStyles from "../styles/index.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: indexStyles },
@@ -30,6 +30,14 @@ function SideBar() {
 
         <li>
           <Link to="/dashboard">Dashboard</Link>
+        </li>
+
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+
+        <li>
+          <Link to="/register">Register</Link>
         </li>
       </ul>
     </div>
