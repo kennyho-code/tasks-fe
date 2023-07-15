@@ -2,6 +2,7 @@ import { Form } from "@remix-run/react";
 import registerStyles from "../styles/register.css";
 import { ActionArgs, LinksFunction, redirect } from "@remix-run/node";
 import { hashPassword } from "~/services/authService.server";
+import { Prisma } from "prisma";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: registerStyles },
@@ -9,11 +10,16 @@ export const links: LinksFunction = () => [
 
 export async function action({ request }: ActionArgs) {
   const body = await request.formData();
-  console.log(body.get("username"));
   const hashedPassword = hashPassword(body.get("password") as string);
 
-  console.log("hashedPassword", hashedPassword);
-  // TODO: validate username and password
+  const newUser = await Prisma.user.create({
+    data: {
+      username: body.get("username") as string,
+      password: hashedPassword,
+    },
+  });
+
+  console.log("newUser", newUser);
   return redirect("/dashboard");
 }
 
