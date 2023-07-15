@@ -2,11 +2,12 @@ import {
   ActionArgs,
   LinksFunction,
   LoaderArgs,
+  createCookie,
   json,
   redirect,
 } from "@remix-run/node";
 import loginStyles from "../styles/login.css";
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { Prisma } from "prisma";
 import { comparePassword } from "~/services/authService.server";
 import { commitSession, getSession } from "~/sessions";
@@ -16,20 +17,15 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ request }: LoaderArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
+  const cookie = request.headers.get("cookie");
+  if (!cookie) return null;
 
-  if (session.has("userId")) {
-    // Redirect to the home page if they are already signed in.
-    return redirect("/");
+  const cookieFromSession = createCookie(cookie);
+  if (cookieFromSession.name.startsWith("__session")) {
+    // throw redirect("/dashboard");
+    throw redirect("/dashboard");
   }
-
-  const data = { error: session.get("error") };
-
-  return json(data, {
-    headers: {
-      "Set-Cookie": await commitSession(session),
-    },
-  });
+  return null;
 }
 
 export async function action({ request }: ActionArgs) {
@@ -73,6 +69,8 @@ export default function LoginIndex() {
         <button className="login-button" type="submit">
           Login
         </button>
+        <br />
+        <Link to="/register">Register</Link>
       </Form>
     </div>
   );

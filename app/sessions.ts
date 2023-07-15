@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from "@remix-run/node"; // or cloudflare/deno
+import { createCookie, createCookieSessionStorage, redirect } from "@remix-run/node";
 
 type SessionData = {
   userId: string;
@@ -25,9 +25,38 @@ const { getSession, commitSession, destroySession } =
         // maxAge: 60,
         // path: "/",
         // sameSite: "lax",
-        // secrets: ["s3cret1"],
+        secrets: ["s3cret1"],
       },
     }
   );
 
-export { getSession, commitSession, destroySession };
+  async function requireUserSession(request: Request) {
+    // get the session
+    const cookie = request.headers.get("cookie");
+    if(!cookie){
+        throw redirect("/login");
+    }
+    const cookieFromSession = createCookie(cookie);
+    if(commitSession.name !== "__session"){
+        throw redirect("/login");
+    }
+    console.log('cookie: ', cookie);
+
+
+    const session = await getSession(cookie);
+
+    console.log('session: ', session);
+  
+    // // validate the session, `userId` is just an example, use whatever value you
+    // // put in the session when the user authenticated
+    // if (!session.has("userId")) {
+    //   // if there is no user session, redirect to login
+    //   throw redirect("/login");
+    // }
+  
+    return session;
+  }
+
+
+
+export { getSession, commitSession, destroySession, requireUserSession };

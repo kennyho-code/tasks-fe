@@ -1,10 +1,31 @@
 import { Link } from "@remix-run/react";
-import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
+import {
+  json,
+  redirect,
+  type LinksFunction,
+  type LoaderArgs,
+  type V2_MetaFunction,
+  createCookie,
+} from "@remix-run/node";
 import indexStyles from "../styles/index.css";
+import { requireUserSession } from "~/sessions";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: indexStyles },
 ];
+
+export async function loader({ request }: LoaderArgs) {
+  const cookie = request.headers.get("cookie");
+  if (!cookie) {
+    throw redirect("/login");
+  }
+  const cookieFromSession = createCookie(cookie);
+  if (!cookieFromSession.name.startsWith("__session")) {
+    throw redirect("/login");
+  }
+
+  return json({ message: "Hello, world!" });
+}
 
 export default function DashboardIndex() {
   return (
@@ -31,13 +52,8 @@ function SideBar() {
         <li>
           <Link to="/dashboard">Dashboard</Link>
         </li>
-
         <li>
-          <Link to="/login">Login</Link>
-        </li>
-
-        <li>
-          <Link to="/register">Register</Link>
+          <Link to="/logout">Logout</Link>
         </li>
       </ul>
     </div>
