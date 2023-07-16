@@ -47,7 +47,8 @@ export async function action({ request }: ActionArgs) {
   if (!isAuthenticated) {
     throw new Error("invalid password");
   }
-  console.log("session: ", session);
+
+  session.set("userId", user.id.toString());
   // TODO: validate username and password
   return redirect("/dashboard", {
     headers: {
