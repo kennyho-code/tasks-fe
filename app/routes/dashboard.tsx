@@ -23,21 +23,29 @@ export async function action({ request }: ActionArgs) {
   console.log("session: ", (await session).get("userId"));
 
   const data = await request.formData();
-  const title = data.get("title") as string;
-  if (!title) {
-    throw new Error("title is required");
+  const intent = data.get("intent");
+
+  console.log("intent: ", intent);
+
+  switch (intent) {
+    case "create":
+      const title = data.get("title") as string;
+      if (!title) {
+        throw new Error("title is required");
+      }
+
+      const userId = parseInt((await session).get("userId") as string);
+
+      return await Prisma.task.create({
+        data: { title: title, userId: userId },
+      });
+    case "delete":
+      const task = JSON.parse(data.get("task") as string);
+      console.log(task);
+      return await Prisma.task.delete({ where: { id: task.id } });
+    default:
+      throw new Error("invalid intent");
   }
-
-  const userId = parseInt((await session).get("userId") as string);
-
-  await Prisma.task.create({
-    data: { title: title, userId: userId },
-  });
-
-  console.log("title: ", title);
-
-  console.log("data: ", data);
-  return null;
 }
 
 export async function loader({ request }: LoaderArgs) {
@@ -95,7 +103,7 @@ function Content() {
   const tasks = useLoaderData().tasks;
   console.log("tasks: ", tasks);
 
-  const currentTasks = tasks.map((task: Task) => <Card title={task.title} />);
+  const currentTasks = tasks.map((task: Task) => <Card task={task} />);
   console.log(currentTasks);
 
   return (
@@ -108,18 +116,26 @@ function Content() {
       <Form method="post">
         <input type="text" name="title" />
         <br />
-        <button type="submit">Add Task</button>
+        <button type="submit" name="intent" value="create">
+          Add Task
+        </button>
       </Form>
     </div>
   );
 }
 
-function Card({ title }: { title: string }) {
+function Card({ task }: { task: Task }) {
   console.log("hello");
   return (
     <div className="card">
       <div className="card-header">
-        <h2>{title}</h2>
+        <h2>{task.title}</h2>
+        <Form method="post">
+          <input type="hidden" name="task" value={JSON.stringify(task)} />
+          <button type="submit" name="intent" value="delete">
+            Delete
+          </button>
+        </Form>
       </div>
     </div>
   );
